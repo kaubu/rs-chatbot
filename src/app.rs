@@ -2,7 +2,7 @@ use leptos::*;
 use leptos_meta::*;
 // use leptos_router::*;
 
-use crate::model::conversation::{Conversation, Message};
+use crate::{model::conversation::{Conversation, Message}, api::converse};
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -26,7 +26,7 @@ pub fn App(cx: Scope) -> impl IntoView {
             c.messages.push(user_message);
         });
 
-        // TODO converse
+        converse(cx, conversation.get())
     });
 
     view! { cx,
