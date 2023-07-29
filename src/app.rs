@@ -4,7 +4,7 @@ use leptos_meta::*;
 
 mod components;
 
-use crate::{model::conversation::{Conversation, Message}, api::converse, app::components::chat_area::ChatArea};
+use crate::{model::conversation::{Conversation, Message}, api::converse, app::components::{chat_area::ChatArea, type_area::TypeArea}};
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {

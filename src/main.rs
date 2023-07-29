@@ -1,3 +1,5 @@
+use cfg_if::cfg_if;
+
 #[cfg(feature = "ssr")]
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -5,7 +7,7 @@ async fn main() -> std::io::Result<()> {
     use actix_web::*;
     use leptos::*;
     use leptos_actix::{generate_route_list, LeptosRoutes};
-    use leptos_start::app::*;
+    use rs_chatbot::app::*;
 
     let conf = get_configuration(None).await.unwrap();
     let addr = conf.leptos_options.site_addr;
@@ -14,7 +16,7 @@ async fn main() -> std::io::Result<()> {
 
     #[get("/style.css")]
     async fn css() -> impl Responder {
-        actix_files:NamedFile::open_async("./style/output.css").await
+        actix_files::NamedFile::open_async("./style/output.css").await
     }
 
     let model = web::Data::new(get_language_model());
@@ -102,7 +104,7 @@ cfg_if! {
                 llm::TokenizerSource::Embedded,
                 Default::default(),
                 llm::load_progress_callback_stdout,
-            ).unwrap_or_else(|e| {
+            ).unwrap_or_else(|err| {
                 panic!("Failed to load model from {model_path:?}: {err}");
             })
         }

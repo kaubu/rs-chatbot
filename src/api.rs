@@ -9,7 +9,7 @@ pub async fn converse(
     prompt: Conversation
 ) -> Result<String, ServerFnError> {
     use llm::models::Llama;
-    use laptos_actix::extract;
+    use leptos_actix::extract;
     use actix_web::{
         web::Data,
         dev::ConnectionInfo,
@@ -33,8 +33,8 @@ pub async fn converse(
         {character_name}: Paris is the capital of France.\n"
     );
 
-    for message in prompt.messages.into_inner() {
-        let msg = message.text();
+    for message in prompt.messages.into_iter() {
+        let msg = message.text;
         let current_line = if message.from_user {
             format!("{user_name}: {msg}\n")
         } else {
@@ -76,7 +76,7 @@ cfg_if! {
             buf: &'a mut String,
             out_str: &'a mut String,
         ) -> impl FnMut(
-            llm::InferenceRequest
+            llm::InferenceResponse
         ) -> Result<llm::InferenceFeedback, Infallible> + 'a {
             use llm::InferenceFeedback::Halt;
             use llm::InferenceFeedback::Continue;
