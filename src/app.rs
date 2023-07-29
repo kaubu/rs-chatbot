@@ -2,7 +2,9 @@ use leptos::*;
 use leptos_meta::*;
 // use leptos_router::*;
 
-use crate::{model::conversation::{Conversation, Message}, api::converse};
+mod components;
+
+use crate::{model::conversation::{Conversation, Message}, api::converse, app::components::chat_area::ChatArea};
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -29,6 +31,27 @@ pub fn App(cx: Scope) -> impl IntoView {
         converse(cx, conversation.get())
     });
 
+    create_effect(cx, move |_| {
+        if let Some(_) = send.input().get() {
+            let model_message = Message {
+                text: String::from("..."),
+                from_user: false,
+            };
+
+            set_conversation.update(move |c| {
+                c.messages.push(model_message);
+            });
+        }
+    });
+
+    create_effect(cx, move |_| {
+        if let Some(Ok(response)) = send.value().get() {
+            set_conversation.update(move |c| {
+                c.messages.last_mut().unwrap().text = response;
+            });
+        }
+    });
+
     view! { cx,
         // injects a stylesheet into the document <head>
         // id=leptos means cargo-leptos will hot-reload this stylesheet
@@ -41,8 +64,6 @@ pub fn App(cx: Scope) -> impl IntoView {
         <TypeArea send/>
     }
 }
-
-
 
 /// 404 - Not Found
 #[component]
